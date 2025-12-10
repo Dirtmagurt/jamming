@@ -1,16 +1,16 @@
 import React from "react";
 import Track from "./Track";
 
-export default function TrackList({ tracks }) {
+export default function TrackList({ tracks, onAddTrack, isRemoval }) {
     return (
         <div>
       {tracks && tracks.length > 0 ? (
         tracks.map((track) => (
           <Track
             key={track.id}
-            name={track.name}
-            artist={track.artist}
-            album={track.album}
+            track={track}
+            onAdd={onAddTrack}
+            isRemoval={isRemoval}
           />
         ))
       ) : (
