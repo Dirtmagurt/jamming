@@ -38,10 +38,29 @@ export  default function App() {
     const [playlistName, setPlaylistName] = useState("My Playlist");
     const [playlistTracks, setPlaylistTracks] = useState("mockPlaylistTracks");
 
+     //Adding a Track - defining the method
+
+    const addTrack = (track) => {
+        //Check if track is already in the playlist
+        const trackExists = playlistTracks.some(
+            (playlistTrack) => playlistTrack.id === track.id 
+            //If you switch to uri 's use playlistTrack.uri === track.uri
+            );
+
+            
+        if (trackExists) {
+            return; 
+        }
+
+        setPlaylistTracks((prevTracks) => [...prevTracks, track]);
+    }
+
 
     return (
         <div className="App" >
             <h1>Jamming</h1>
+
+            {/* Pass addTrack down to SearchResults */}
 
             <SearchResults tracks={searchResults} />
 
