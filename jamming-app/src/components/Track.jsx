@@ -21,6 +21,17 @@ export default function Track({track, onAdd, isRemoval }) {
                     {artist} | {album}
                 </p>
             </div>
+
+            {/*Show + button when this is NOT a removal context (search results) */}
+            {!isRemoval && (
+                <button className="Track-action" onClick={handleAddClick}>
+                    +
+                </button>
+            )}
+
+
+
+
         </div>
     );
 }
