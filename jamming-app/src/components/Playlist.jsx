@@ -15,7 +15,10 @@ export default function Playlist ({name, tracks, onNameChange }) {
             placeholder="New Playlist"
             />
 
-            <TrackList tracks={tracks} />
+
+            {/* Here the TrackList is in "removal" mode (no + buttons) */}
+
+            <TrackList tracks={tracks} isRemoval={true} />
 
         </section>
     );
