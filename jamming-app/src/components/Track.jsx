@@ -1,7 +1,17 @@
 import React from "react";
 
 
-export default function Track({name, artist, album}) {
+export default function Track({track, onAdd, isRemoval }) {
+    const { name, artist, album } = track;
+    
+    const handleAddClick = () => {
+        if (onAdd) {
+            onAdd(track);
+        }
+    }
+    
+    //Placeholder for isRemoval
+
     return (
 
         <div className="Track">
