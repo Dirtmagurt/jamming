@@ -1,7 +1,7 @@
 import React from "react";
 
 
-export default function Track({track, onAdd, isRemoval }) {
+export default function Track({track, onAdd, isRemoval, onRemove }) {
     const { name, artist, album } = track;
     
     const handleAddClick = () => {
@@ -10,7 +10,28 @@ export default function Track({track, onAdd, isRemoval }) {
         }
     }
     
-    //Placeholder for isRemoval
+    const handleRemoveClick = () => {
+        if (onRemove) {
+            onRemove(track)
+        }
+    }
+
+    const renderAction = () => {
+        if (isRemoval) {
+            return(
+                <button className="Track=action" onClick={handleRemoveClick}>
+                    -
+                </button>
+            );
+        }
+        else {
+            return (
+                <button className="Track-action" onClick={handleAddClick}> 
+                +
+                </button>
+            );
+        }
+    };
 
     return (
 
