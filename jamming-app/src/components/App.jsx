@@ -55,6 +55,24 @@ export  default function App() {
         setPlaylistTracks((prevTracks) => [...prevTracks, track]);
     }
 
+    const removeTrack = (track) => {
+        //Again checking if track is already in the playlist
+        const trackExists = playlistTracks.some(
+            (playlistTrack) => playlistTrack.id === track.id
+
+        );
+        if (!trackExists) {
+            return; //Nothing to be removed
+        }
+
+        //A new array without the removed track is created.
+        setPlaylistTracks((prevTracks) => 
+            prevTracks.filter(
+                (playlistTrack) => playlistTrack.id !== track.id
+            )
+        );    
+    };
+
 
     return (
         <div className="App" >
@@ -68,7 +86,7 @@ export  default function App() {
                 name={playlistName}
                 tracks={playlistTracks}
                 onNameChange={setPlaylistName}
-                ///onRemoveTrack, onSave will come later
+                onRemoveTrack={removeTrack}
                 />
 
         </div>
