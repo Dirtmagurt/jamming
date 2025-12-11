@@ -1,7 +1,7 @@
 import React from "react";
 import Track from "./Track";
 
-export default function TrackList({ tracks, onAddTrack, isRemoval }) {
+export default function TrackList({ tracks, onAddTrack, isRemoval, onRemoveTrack }) {
     return (
         <div>
       {tracks && tracks.length > 0 ? (
@@ -11,6 +11,7 @@ export default function TrackList({ tracks, onAddTrack, isRemoval }) {
             track={track}
             onAdd={onAddTrack}
             isRemoval={isRemoval}
+            onRemoveTrack={onRemoveTrack}
           />
         ))
       ) : (
