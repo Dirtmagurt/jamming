@@ -1,7 +1,7 @@
 import React from "react";
 import TrackList from "./Tracklist";
 
-export default function Playlist ({name, tracks, onNameChange }) {
+export default function Playlist ({name, tracks, onNameChange, onRemoveTrack }) {
     // Handle playlist name change
     const handleNameChange = (event) => {
         onNameChange(event.target.value);
@@ -16,9 +16,12 @@ export default function Playlist ({name, tracks, onNameChange }) {
             />
 
 
-            {/* Here the TrackList is in "removal" mode (no + buttons) */}
+            
 
-            <TrackList tracks={tracks} isRemoval={true} />
+            <TrackList 
+            tracks={tracks}
+             isRemoval={true} 
+             onRemoveTrack={onRemoveTrack} />
 
         </section>
     );
