@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import SearchResults from "./SearchResults";
 import Playlist from "./Playlist";
 
 
-const mockSearchResutls = [
+const mockSearchResults = [
     {
         id: 1,
         name: "Blinding Lights",
@@ -33,7 +33,7 @@ const mockPlaylistTracks = [
 ]
 
 export  default function App() {
-    const searchResults = mockSearchResutls; // stand in for real API results
+    const [searchResults] = useState(mockSearchResults); // stand in for real API results
 
     const [playlistName, setPlaylistName] = useState("My Playlist");
     const [playlistTracks, setPlaylistTracks] = useState("mockPlaylistTracks");
@@ -71,6 +71,24 @@ export  default function App() {
                 (playlistTrack) => playlistTrack.id !== track.id
             )
         );    
+
+    // Save Playlist (mock)
+    const savePlaylist = () => {
+        //creating an array of URIs for Spotify
+        const trackUris = playlistTracks.map((track) => track.uri);
+
+        //Mock API call
+        console.log("Saving playlist to Spotify (mock)", {
+            name: playlistName,
+            uris: trackUris,
+        });
+
+        //Resets playlist after export
+        setPlaylistName("New Playlist");
+        setPlaylistTracks([]);
+    }    
+
+
     };
 
 
@@ -87,6 +105,7 @@ export  default function App() {
                 tracks={playlistTracks}
                 onNameChange={setPlaylistName}
                 onRemoveTrack={removeTrack}
+                onSave={savePlaylist}
                 />
 
         </div>
