@@ -1,7 +1,7 @@
 import React from "react";
 import TrackList from "./Tracklist";
 
-export default function Playlist ({name, tracks, onNameChange, onRemoveTrack }) {
+export default function Playlist ({name, tracks, onNameChange, onRemoveTrack, onSave }) {
     // Handle playlist name change
     const handleNameChange = (event) => {
         onNameChange(event.target.value);
@@ -23,6 +23,9 @@ export default function Playlist ({name, tracks, onNameChange, onRemoveTrack }) 
             tracks={tracks}
              isRemoval={true} 
              onRemoveTrack={onRemoveTrack} />
+
+
+           <button onClick={onSave}>Save to Spotify</button>  
 
         </section>
     );
