@@ -80,7 +80,7 @@ export  default function App() {
 
             {/* Pass addTrack down to SearchResults */}
 
-            <SearchResults tracks={searchResults} />
+            <SearchResults tracks={searchResults} onAddTrack={addTrack} />
 
             <Playlist 
                 name={playlistName}

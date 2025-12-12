@@ -9,9 +9,10 @@ export default function Playlist ({name, tracks, onNameChange, onRemoveTrack }) 
 
     return (
         <section className="Playlist">
+            {/* Editable playlist title */}
             <input type="text"
-            value={name}
-            onChange={handleNameChange}
+            value={name}                 // controlled by App state
+            onChange={handleNameChange}  //updates App state on each keystrok
             placeholder="New Playlist"
             />
 
