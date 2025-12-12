@@ -19,7 +19,7 @@ const mockPlaylistTracks = [
 
 
 export  default function App() {
-    const [searchResults] = useState(mockSearchResults); // stand in for real API results
+    const [searchResults, setSearchResults] = useState([]); // stand in for real API results
 
     const [playlistName, setPlaylistName] = useState("My Playlist");
     const [playlistTracks, setPlaylistTracks] = useState(mockPlaylistTracks);
@@ -28,18 +28,20 @@ export  default function App() {
 
     //Added the onSearch function
     const onSearch = async (term) => {
-    try {
-      const token = await Spotify.getAccessToken();
-      console.log("Spotify token acquired:", token);
+        if (!term) return;
 
-      // later:
-      // const results = await Spotify.search(term);
-      // setSearchResults(results);
+        try {
+        const token = await Spotify.getAccessToken();
+        console.log("Spotify token acquired:", token);
 
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
-    }
+        
+        const results = await Spotify.search(term);
+            setSearchResults(results);
+
+        } catch (err) {
+        console.error(err);
+        alert(err.message);
+        }
   };
 
 
