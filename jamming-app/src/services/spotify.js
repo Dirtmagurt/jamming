@@ -131,6 +131,29 @@ async function exchangeCodeForToken(code) {
   return data.access_token;
 }
 
+async function fetchJson(url, accessToken) {
+    const resp = await fetch(url, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`
+        },
+    });
+    
+    if (!resp.ok) {
+        const text = await resp.text();
+
+        //Incase token error
+        if(resp.status === 401) {
+            throw new Error ("Invalid or expired access token, please log in again.")
+        }
+
+        throw new Error (`Spotify API error (${resp.status}): ${text}`);
+     }
+
+     return resp.json();
+}
+
+
+
 
 const Spotify = {
   async getAccessToken() {
@@ -160,6 +183,30 @@ const Spotify = {
     // redirectToSpotifyLogin navigates away; this is here for completeness
     return null;
   },
+
+    async search(term) {
+    const accessToken = await this.getAccessToken(); // will redirect if not logged in
+    if (!accessToken) return [];
+
+    const encodedTerm = encodeURIComponent(term);
+    const url = `https://api.spotify.com/v1/search?q=${encodedTerm}&type=track`;
+
+    const json = await fetchJson(url, accessToken);
+
+    // json.tracks.items is the list of tracks returned by Search 
+    const items = json.tracks?.items ?? [];
+
+    // Convert Spotify’s track format into your app format
+    return items.map((t) => ({
+      id: t.id,
+      name: t.name,
+      artist: t.artists?.[0]?.name ?? "Unknown Artist",
+      album: t.album?.name ?? "Unknown Album",
+      uri: t.uri,
+    }));
+  },
+
+
 };
 
 export default Spotify;
