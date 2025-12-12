@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SearchResults from "./SearchResults";
 import Playlist from "./Playlist";
 import Spotify from "../services/spotify";
+import SearchBar from './SearchBar';
 
 
 const mockSearchResults = [
