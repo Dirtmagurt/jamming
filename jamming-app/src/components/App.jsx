@@ -84,21 +84,22 @@ export  default function App() {
 
     };
 
-        // Save Playlist (mock)
-    const savePlaylist = () => {
-        //creating an array of URIs for Spotify
-        const trackUris = playlistTracks.map((track) => track.uri);
+        // Save Playlist 
+    const savePlaylist = async () => {
+    const trackUris = playlistTracks.map((t) => t.uri);
 
-        //Mock API call
-        console.log("Saving playlist to Spotify (mock)", {
-            name: playlistName,
-            uris: trackUris,
-        });
+    try {
+        await Spotify.savePlaylist(playlistName, trackUris);
 
-        //Resets playlist after export
+        // Reset UI after successful save
         setPlaylistName("New Playlist");
         setPlaylistTracks([]);
-    };   
+    } catch (err) {
+        console.error(err);
+        alert(err.message);
+    }
+    };
+
 
 
     return (
