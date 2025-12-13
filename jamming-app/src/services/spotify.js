@@ -7,10 +7,8 @@ const redirectUri = import.meta.env.VITE_SPOTIFY_REDIRECT_URI;
 
 // Scopes needed to create playlists + add tracks.
 // Add playlist-modify-private too if you want private playlists.
-const scopes = [
-  "playlist-modify-public",
-  "playlist-modify-private",
-];
+const scopes = ["playlist-modify-public", "playlist-modify-private"];
+
 
 // Spotify endpoints
 const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
@@ -204,6 +202,47 @@ const Spotify = {
       album: t.album?.name ?? "Unknown Album",
       uri: t.uri,
     }));
+  },
+
+    async savePlaylist(playlistName, trackUris) {
+    // Guard clauses (helps prevent weird API calls)
+    if (!playlistName) return;
+    if (!trackUris || trackUris.length === 0) return;
+
+    const accessToken = await this.getAccessToken();
+    if (!accessToken) return;
+
+    // 1) Get current user id: GET /v1/me :contentReference[oaicite:9]{index=9}
+    const me = await spotifyFetch("https://api.spotify.com/v1/me", accessToken);
+    const userId = me.id;
+
+    // 2) Create playlist: POST /v1/users/{user_id}/playlists :contentReference[oaicite:10]{index=10}
+    const created = await spotifyFetch(
+      `https://api.spotify.com/v1/users/${encodeURIComponent(userId)}/playlists`,
+      accessToken,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          name: playlistName,
+          description: "Created with Jammming",
+          public: false, // optional: set true if you want public playlists
+        }),
+      }
+    );
+
+    const playlistId = created.id;
+
+    // 3) Add items to playlist: POST /v1/playlists/{playlist_id}/tracks :contentReference[oaicite:11]{index=11}
+    await spotifyFetch(
+      `https://api.spotify.com/v1/playlists/${encodeURIComponent(playlistId)}/tracks`,
+      accessToken,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          uris: trackUris, // IMPORTANT: Spotify expects URIs here :contentReference[oaicite:12]{index=12}
+        }),
+      }
+    );
   },
 
 
