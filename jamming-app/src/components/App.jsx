@@ -50,8 +50,8 @@ export  default function App() {
     const addTrack = (track) => {
         //Check if track is already in the playlist
         const trackExists = playlistTracks.some(
-            (playlistTrack) => playlistTrack.id === track.id 
-            //If you switch to uri 's use playlistTrack.uri === track.uri
+            (playlistTrack) => playlistTrack.uri === track.uri 
+            
             );
 
             
@@ -65,7 +65,7 @@ export  default function App() {
     const removeTrack = (track) => {
         //Again checking if track is already in the playlist
         const trackExists = playlistTracks.some(
-            (playlistTrack) => playlistTrack.id === track.id
+            (playlistTrack) => playlistTrack.uri === track.uri
 
         );
         if (!trackExists) {
@@ -75,7 +75,7 @@ export  default function App() {
         //A new array without the removed track is created.
         setPlaylistTracks((prevTracks) => 
             prevTracks.filter(
-                (playlistTrack) => playlistTrack.id !== track.id
+                (playlistTrack) => playlistTrack.uri !== track.uri
             )
         );    
 
