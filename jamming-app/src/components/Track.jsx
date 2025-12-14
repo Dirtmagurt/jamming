@@ -1,58 +1,35 @@
 import React from "react";
 
+export default function Track({ track, onAdd, isRemoval, onRemove, isInPlaylist }) {
+  const { name, artist, album } = track;
 
-export default function Track({track, onAdd, isRemoval, onRemove }) {
-    const { name, artist, album } = track;
-    
-    const handleAddClick = () => {
-        if (onAdd) {
-            onAdd(track);
-        }
-    }
-    
-    const handleRemoveClick = () => {
-        if (onRemove) {
-            onRemove(track)
-        }
-    }
+  const handleAddClick = () => onAdd?.(track);
+  const handleRemoveClick = () => onRemove?.(track);
 
-    const renderAction = () => {
-        if (isRemoval) {
-            return(
-                <button className="Track=action" onClick={handleRemoveClick}>
-                    -
-                </button>
-            );
-        }
-        else {
-            return (
-                <button className="Track-action" onClick={handleAddClick}> 
-                +
-                </button>
-            );
-        }
-    };
+  // Search results context: hide (or disable) + if already in playlist
+  const shouldShowAdd = !isRemoval && !isInPlaylist;
+  const shouldShowRemove = isRemoval;
 
-    return (
+  return (
+    <div className="Track">
+      <div className="Track-info">
+        <h3>{name}</h3>
+        <p>
+          {artist} | {album}
+        </p>
+      </div>
 
-        <div className="Track">
-            <div className="Track-info">
-                <h3>{name}</h3>
-                <p>
-                    {artist} | {album}
-                </p>
-            </div>
+      {shouldShowAdd && (
+        <button className="Track-action" onClick={handleAddClick}>
+          +
+        </button>
+      )}
 
-            {/*Show + button when this is NOT a removal context (search results) */}
-            {!isRemoval && (
-                <button className="Track-action" onClick={handleAddClick}>
-                    +
-                </button>
-            )}
-
-
-
-
-        </div>
-    );
+      {shouldShowRemove && (
+        <button className="Track-action" onClick={handleRemoveClick}>
+          -
+        </button>
+      )}
+    </div>
+  );
 }
