@@ -45,44 +45,25 @@ export  default function App() {
   };
 
 
-     //Adding a Track - defining the method
-
     const addTrack = (track) => {
-        //Check if track is already in the playlist
-        const trackExists = playlistTracks.some(
-            (playlistTrack) => playlistTrack.uri === track.uri 
-            
-            );
-
-            
-        if (trackExists) {
-            return; 
-        }
-
-        setPlaylistTracks((prevTracks) => [...prevTracks, track]);
-    }
+    setPlaylistTracks((prevTracks) => {
+        const exists = prevTracks.some((t) => t.uri === track.uri);
+        return exists ? prevTracks : [...prevTracks, track];
+    });
+    };
 
     const removeTrack = (track) => {
-        //Again checking if track is already in the playlist
-        const trackExists = playlistTracks.some(
-            (playlistTrack) => playlistTrack.uri === track.uri
-
-        );
-        if (!trackExists) {
-            return; //Nothing to be removed
-        }
-
-        //A new array without the removed track is created.
-        setPlaylistTracks((prevTracks) => 
-            prevTracks.filter(
-                (playlistTrack) => playlistTrack.uri !== track.uri
-            )
-        );    
-
- 
-
-
+    setPlaylistTracks((prevTracks) =>
+        prevTracks.filter((t) => t.uri !== track.uri)
+    );
     };
+
+
+  
+  
+
+
+
 
         // Save Playlist 
     const savePlaylist = async () => {
