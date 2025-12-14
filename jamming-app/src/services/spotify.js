@@ -150,6 +150,26 @@ async function fetchJson(url, accessToken) {
      return resp.json();
 }
 
+async function spotifyFetch(url, accessToken, options = {}) {
+  const resp = await fetch(url, {
+    ...options,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+  });
+
+  if (!resp.ok) {
+    const text = await resp.text();
+    if (resp.status === 401) {
+      throw new Error("Invalid or expired access token, please log in again.");
+    }
+    throw new Error(`Spotify API error (${resp.status}): ${text}`);
+  }
+
+  return resp.status === 204 ? null : resp.json();
+}
 
 
 
