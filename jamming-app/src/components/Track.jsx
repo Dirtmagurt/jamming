@@ -6,26 +6,23 @@ export default function Track({ track, onAdd, isRemoval, onRemove, isInPlaylist 
   const handleAddClick = () => onAdd?.(track);
   const handleRemoveClick = () => onRemove?.(track);
 
-  // Search results context: hide (or disable) + if already in playlist
-  const shouldShowAdd = !isRemoval && !isInPlaylist;
-  const shouldShowRemove = isRemoval;
+  const showAdd = !isRemoval && !isInPlaylist;
+  const showRemove = isRemoval;
 
   return (
     <div className="Track">
       <div className="Track-info">
         <h3>{name}</h3>
-        <p>
-          {artist} | {album}
-        </p>
+        <p>{artist} | {album}</p>
       </div>
 
-      {shouldShowAdd && (
+      {showAdd && (
         <button className="Track-action" onClick={handleAddClick}>
           +
         </button>
       )}
 
-      {shouldShowRemove && (
+      {showRemove && (
         <button className="Track-action" onClick={handleRemoveClick}>
           -
         </button>
@@ -33,3 +30,4 @@ export default function Track({ track, onAdd, isRemoval, onRemove, isInPlaylist 
     </div>
   );
 }
+
