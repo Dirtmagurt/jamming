@@ -100,6 +100,9 @@ export  default function App() {
     }
     };
 
+    const playlistUris = new Set(playlistTracks.map((t) => t.uri));
+
+
 
 
     return (
@@ -111,7 +114,7 @@ export  default function App() {
             <SearchBar onSearch={onSearch} /> 
 
 
-            <SearchResults tracks={searchResults} onAddTrack={addTrack} />
+            <SearchResults tracks={searchResults} onAddTrack={addTrack} playlistUris={playlistUris} />
 
             <Playlist 
                 name={playlistName}
