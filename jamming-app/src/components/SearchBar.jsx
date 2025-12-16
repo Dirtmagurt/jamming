@@ -16,7 +16,8 @@ export default function SearchBar({ onSearch }) {
         value={term}
         onChange={(e) => setTerm(e.target.value)}
       />
-      <button type="submit">Search</button>
+      <button className="Button" type="submit">Search</button>
+
     </form>
   );
 }

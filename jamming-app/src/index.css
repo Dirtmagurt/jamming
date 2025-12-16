@@ -1,68 +1,326 @@
+/* ---------- Base / Theme ---------- */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --bg-0: #070a12;
+  --bg-1: #0a1020;
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-strong: rgba(255, 255, 255, 0.10);
+  --stroke: rgba(255, 255, 255, 0.12);
+  --stroke-soft: rgba(255, 255, 255, 0.08);
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --text: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.65);
+  --faint: rgba(255, 255, 255, 0.45);
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --accent: #67e8f9;     /* neon-cyan */
+  --accent-2: #a78bfa;   /* soft purple */
+  --danger: #fb7185;
+
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+  --shadow-soft: 0 12px 40px rgba(0, 0, 0, 0.35);
+
+  --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
+    "Segoe UI Emoji";
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
+* { box-sizing: border-box; }
+html, body { height: 100%; }
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  color: var(--text);
+  font-family: var(--font);
+  background:
+    radial-gradient(1200px 700px at 20% 10%, rgba(103, 232, 249, 0.12), transparent 60%),
+    radial-gradient(900px 600px at 80% 20%, rgba(167, 139, 250, 0.10), transparent 55%),
+    linear-gradient(180deg, var(--bg-0), var(--bg-1));
+}
+
+/* subtle noise effect */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* ---------- App Layout ---------- */
+.App {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.App-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(14px);
+  background: rgba(7, 10, 18, 0.55);
+  border-bottom: 1px solid var(--stroke-soft);
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+.App-header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 22px 18px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.Brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.Brand-title {
+  margin: 0;
+  letter-spacing: 0.6px;
+  font-weight: 800;
+  font-size: 22px;
+}
+
+.Brand-subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.Badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke-soft);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.Badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 18px rgba(103, 232, 249, 0.65);
+}
+
+.App-main {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 22px 18px 40px;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 18px;
+}
+
+@media (max-width: 900px) {
+  .App-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Panels (Glass Cards) ---------- */
+.Panel {
+  border-radius: var(--radius);
+  background: var(--glass);
+  border: 1px solid var(--stroke-soft);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 520px;
+}
+
+.Panel-header {
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--stroke-soft);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), transparent);
+}
+
+.Panel-title {
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 0.35px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.Panel-meta {
+  color: var(--faint);
+  font-size: 12px;
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.Panel-body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+}
+
+/* ---------- Search Bar ---------- */
+.SearchBar {
+  display: flex;
+  gap: 10px;
+}
+
+.SearchBar input {
+  flex: 1;
+  border-radius: 14px;
+  border: 1px solid var(--stroke-soft);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  padding: 12px 12px;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.SearchBar input::placeholder {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.SearchBar input:focus {
+  border-color: rgba(103, 232, 249, 0.55);
+  box-shadow: 0 0 0 4px rgba(103, 232, 249, 0.12);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.Button {
+  border: 1px solid rgba(103, 232, 249, 0.30);
+  background: rgba(103, 232, 249, 0.12);
+  color: var(--text);
+  border-radius: 14px;
+  padding: 11px 14px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: transform 120ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.Button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(103, 232, 249, 0.55);
+  background: rgba(103, 232, 249, 0.18);
+}
+
+.Button:active {
+  transform: translateY(0px);
+}
+
+.Button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ---------- Track List ---------- */
+.TrackList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+  padding-right: 6px;
+}
+
+.Track {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--stroke-soft);
+  transition: transform 140ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.Track:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.Track-info h3 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  line-height: 1.25;
+  font-weight: 750;
+}
+
+.Track-info p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.Track-action {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid var(--stroke-soft);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 0;
+  display: grid;
+  place-items: center;
+  transition: transform 120ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.Track-action:hover {
+  transform: translateY(-1px);
+  border-color: rgba(103, 232, 249, 0.45);
+  background: rgba(103, 232, 249, 0.10);
+}
+
+.Track-action.remove:hover {
+  border-color: rgba(251, 113, 133, 0.55);
+  background: rgba(251, 113, 133, 0.10);
+}
+
+/* ---------- Playlist Name Input ---------- */
+.PlaylistName {
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid var(--stroke-soft);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  padding: 12px 12px;
+  outline: none;
+  font-weight: 750;
+  letter-spacing: 0.2px;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.PlaylistName:focus {
+  border-color: rgba(167, 139, 250, 0.55);
+  box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.12);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* ---------- Small helpers ---------- */
+.Divider {
+  height: 1px;
+  background: var(--stroke-soft);
+  margin: 6px 0;
+}
+
+.EmptyState {
+  color: var(--muted);
+  font-size: 13px;
+  padding: 12px 4px;
 }
