@@ -143,6 +143,22 @@ export  default function App() {
                     playlistUris={playlistUris}
                 />
                 </div>
+
+                <div className="Divider" />
+
+                <section className="Panel" style={{ minHeight: "unset" }}>
+                <UserPlaylists
+                    playlists={userPlaylists}
+                    isLoading={isLoadingPlaylists}
+                    error={playlistsError}
+                />
+                </section>
+
+
+
+
+
+
             </section>
 
             {/* Right panel: Playlist */}
