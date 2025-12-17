@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SearchResults from "./SearchResults";
 import Playlist from "./Playlist";
 import Spotify from "../services/spotify";
 import SearchBar from './SearchBar';
+import UserPlaylists from "./UserPlaylists";
 
 
 const mockSearchResults = [
@@ -83,16 +84,19 @@ export  default function App() {
 
     const [userPlaylists, setUserPlaylists] = useState([]);
     const [isLoadingPlaylists, setIsLoadingPlaylists] = useState(false);
+    const [playlistsError, setPlaylistsError] = useState("");
+
 
     useEffect(() => {
     const loadPlaylists = async () => {
         try {
         setIsLoadingPlaylists(true);
+        setPlaylistsError("");
         const playlists = await Spotify.getCurrentUserPlaylists();
         setUserPlaylists(playlists);
         } catch (e) {
         console.error(e);
-        // optional: alert(e.message)
+        setPlaylistsError(e.message || "Failed to load playlists.");
         } finally {
         setIsLoadingPlaylists(false);
         }
@@ -100,6 +104,7 @@ export  default function App() {
 
     loadPlaylists();
     }, []);
+
 
 
 
