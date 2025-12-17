@@ -81,6 +81,29 @@ export  default function App() {
     }
     };
 
+    const [userPlaylists, setUserPlaylists] = useState([]);
+    const [isLoadingPlaylists, setIsLoadingPlaylists] = useState(false);
+
+    useEffect(() => {
+    const loadPlaylists = async () => {
+        try {
+        setIsLoadingPlaylists(true);
+        const playlists = await Spotify.getCurrentUserPlaylists();
+        setUserPlaylists(playlists);
+        } catch (e) {
+        console.error(e);
+        // optional: alert(e.message)
+        } finally {
+        setIsLoadingPlaylists(false);
+        }
+    };
+
+    loadPlaylists();
+    }, []);
+
+
+
+
     const playlistUris = new Set(playlistTracks.map((t) => t.uri));
 
 
