@@ -92,7 +92,7 @@ async function redirectToSpotifyLogin() {
     client_id: clientId,
     response_type: "code",
     redirect_uri: redirectUri,
-    scope: scopes.join(" "),
+    scope: scopes,
     code_challenge_method: "S256",
     code_challenge: challenge,
   });
