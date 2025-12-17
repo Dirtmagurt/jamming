@@ -19,6 +19,8 @@ const scopes = [
 // Spotify endpoints
 const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
 const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
+let tokenRequestInFlight = null;
+
 
 // Storage keys
 const LS_TOKEN = "spotify_access_token";
@@ -181,32 +183,47 @@ async function spotifyFetch(url, accessToken, options = {}) {
 
 const Spotify = {
   async getAccessToken() {
-    // 1) If we already have a valid token stored, use it
     const stored = getStoredToken();
     if (stored) return stored;
 
-    // 2) If we were redirected back from Spotify, we should have ?code=...
+    // If another call is already exchanging or redirecting, wait for it.
+    if (tokenRequestInFlight) return tokenRequestInFlight;
+
     const url = new URL(window.location.href);
     const code = url.searchParams.get("code");
     const error = url.searchParams.get("error");
 
     if (error) {
-      // User denied access or Spotify returned an OAuth error
       clearUrlParams();
       throw new Error(`Spotify authorization error: ${error}`);
     }
 
     if (code) {
-      // Exchange code for token, store it, return it
-      return await exchangeCodeForToken(code);
+      // IMPORTANT: set in-flight promise before awaiting so other callers reuse it
+      tokenRequestInFlight = (async () => {
+        try {
+          const token = await exchangeCodeForToken(code);
+          return token;
+        } finally {
+          tokenRequestInFlight = null;
+        }
+      })();
+
+      return tokenRequestInFlight;
     }
 
-    // 3) Otherwise, no token + no code: start login
-    await redirectToSpotifyLogin();
+    tokenRequestInFlight = (async () => {
+      try {
+        await redirectToSpotifyLogin();
+        return null;
+      } finally {
+        tokenRequestInFlight = null;
+      }
+    })();
 
-    // redirectToSpotifyLogin navigates away; this is here for completeness
-    return null;
+    return tokenRequestInFlight;
   },
+
 
     async search(term) {
     const accessToken = await this.getAccessToken(); // will redirect if not logged in
