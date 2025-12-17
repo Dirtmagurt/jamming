@@ -271,6 +271,27 @@ const Spotify = {
     );
   },
 
+  async getCurrentUserPlaylists(limit = 50) {
+    const accessToken = await this.getAccessToken();
+
+    let url = `https://api.spotify.com/v1/me/playlists?limit=${limit}`;
+    const all = [];
+
+    while (url) {
+      const data = await spotifyFetch(url, accessToken);
+      all.push(...(data.items || []));
+      url = data.next;
+    }
+
+    return all.map((p) => ({
+      id: p.id,
+      name: p.name,
+      imageUrl: p.images?.[0]?.url || "",
+      trackCount: p.tracks?.total ?? 0,
+      owner: p.owner?.display_name || p.owner?.id || "",
+    }));
+  },
+
 
 };
 
