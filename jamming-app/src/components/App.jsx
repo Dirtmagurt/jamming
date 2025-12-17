@@ -86,25 +86,61 @@ export  default function App() {
 
 
 
-    return (
-        <div className="App" >
-            <h1>Jamming</h1>
+            return (
+        <div className="App">
+            <header className="App-header">
+            <div className="App-header-inner">
+                <div className="Brand">
+                <h1 className="Brand-title">Jammming</h1>
+                <p className="Brand-subtitle">Search Spotify, build a playlist, save it instantly.</p>
+                </div>
 
-            {/* Pass addTrack down to SearchResults */}
+                <div className="Badge">
+                <span className="Badge-dot" />
+                Connected via Spotify OAuth
+                </div>
+            </div>
+            </header>
 
-            <SearchBar onSearch={onSearch} /> 
-
-
-            <SearchResults tracks={searchResults} onAddTrack={addTrack} playlistUris={playlistUris} />
-
-            <Playlist 
-                name={playlistName}
-                tracks={playlistTracks}
-                onNameChange={setPlaylistName}
-                onRemoveTrack={removeTrack}
-                onSave={savePlaylist}
+            <main className="App-main">
+            {/* Left panel: Search + Results */}
+            <section className="Panel">
+                <div className="Panel-header">
+                <div className="Panel-title">
+                    Search
+                    <span className="Panel-meta">Find tracks to add</span>
+                </div>
+                </div>
+                <div className="Panel-body">
+                <SearchBar onSearch={onSearch} />
+                <div className="Divider" />
+                <SearchResults
+                    tracks={searchResults}
+                    onAddTrack={addTrack}
+                    playlistUris={playlistUris}
                 />
+                </div>
+            </section>
 
+            {/* Right panel: Playlist */}
+            <section className="Panel">
+                <div className="Panel-header">
+                <div className="Panel-title">
+                    Playlist
+                    <span className="Panel-meta">{playlistTracks.length} track(s)</span>
+                </div>
+                </div>
+                <div className="Panel-body">
+                <Playlist
+                    name={playlistName}
+                    tracks={playlistTracks}
+                    onNameChange={setPlaylistName}
+                    onRemoveTrack={removeTrack}
+                    onSave={savePlaylist}
+                />
+                </div>
+            </section>
+            </main>
         </div>
-    );
+        );
 }

@@ -3,7 +3,7 @@ import Track from "./Track";
 
 export default function TrackList({ tracks, onAddTrack, isRemoval, onRemoveTrack, playlistUris }) {
   return (
-    <div>
+    <div className="TrackList" >
       {tracks && tracks.length > 0 ? (
         tracks.map((track) => (
           <Track
@@ -16,7 +16,7 @@ export default function TrackList({ tracks, onAddTrack, isRemoval, onRemoveTrack
           />
         ))
       ) : (
-        <p>No tracks found.</p>
+        <p className="EmptyStaate" >No tracks found.</p>
       )}
     </div>
   );
