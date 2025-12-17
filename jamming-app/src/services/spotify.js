@@ -7,7 +7,13 @@ const redirectUri = import.meta.env.VITE_SPOTIFY_REDIRECT_URI;
 
 // Scopes needed to create playlists + add tracks.
 // Add playlist-modify-private too if you want private playlists.
-const scopes = ["playlist-modify-public", "playlist-modify-private"];
+const scopes = [
+  "playlist-modify-public",
+  "playlist-modify-private",
+  "playlist-read-private",
+  "playlist-read-collaborative",
+].join(" ");
+
 
 
 // Spotify endpoints
