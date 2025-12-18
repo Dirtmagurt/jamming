@@ -113,6 +113,30 @@ export  default function App() {
 
 
 
+    const computeIsDirty = () => {
+    // If nothing loaded, keep current behavior 
+        if (!originalSnapshot || !activePlaylistId) return false;
+
+        const currentName = playlistName.trim();
+        const originalName = (originalSnapshot.name || "").trim();
+
+        const currentUris = playlistTracks.map((t) => t.uri);
+        const originalUris = originalSnapshot.uris || [];
+
+        const nameChanged = currentName !== originalName;
+
+        const tracksChanged =
+            currentUris.length !== originalUris.length ||
+            currentUris.some((uri, i) => uri !== originalUris[i]);
+
+        return nameChanged || tracksChanged;
+        };
+
+    const isDirty = computeIsDirty();
+
+
+
+
         return (
         <div className="App">
             <header className="App-header">
