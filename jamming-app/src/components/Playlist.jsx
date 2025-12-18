@@ -25,7 +25,10 @@ export default function Playlist ({name, tracks, onNameChange, onRemoveTrack, on
              onRemoveTrack={onRemoveTrack} />
 
 
-           <button className="Button" onClick={onSave} disabled={!tracks.length} >Save to Spotify</button>  
+           <button className="Button" onClick={onSave} disabled={!tracks.length}>
+                Save to Spotify
+                </button>
+ 
 
         </section>
     );
