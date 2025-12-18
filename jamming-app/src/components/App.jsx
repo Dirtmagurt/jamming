@@ -24,6 +24,9 @@ export  default function App() {
 
     const [playlistName, setPlaylistName] = useState("My Playlist");
     const [playlistTracks, setPlaylistTracks] = useState(mockPlaylistTracks);
+    const [activePlaylistId, setActivePlaylistId] = useState(null);
+    const [originalSnapshot, setOriginalSnapshot] = useState(null);
+
 
 
 
