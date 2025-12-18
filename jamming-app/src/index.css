@@ -48,6 +48,11 @@ body::before {
   mix-blend-mode: overlay;
 }
 
+#root {
+  height: 100%;
+}
+
+
 /* ---------- App Layout ---------- */
 .App {
   height: 100vh;      /* instead of min-height */
@@ -168,10 +173,10 @@ body::before {
   display: flex;
   flex-direction: column;
 
-  /* New: critical for internal scrolling */
   min-height: 0;
-  height: 100%;
+  /* removed height: 100%; */
 }
+
 
 
 .Panel-header {
