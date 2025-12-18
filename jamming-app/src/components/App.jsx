@@ -113,14 +113,15 @@ export  default function App() {
 
 
 
-
-            return (
+        return (
         <div className="App">
             <header className="App-header">
             <div className="App-header-inner">
                 <div className="Brand">
                 <h1 className="Brand-title">Jammming</h1>
-                <p className="Brand-subtitle">Search Spotify, build a playlist, save it instantly.</p>
+                <p className="Brand-subtitle">
+                    Search Spotify, build a playlist, save it instantly.
+                </p>
                 </div>
 
                 <div className="Badge">
@@ -131,60 +132,66 @@ export  default function App() {
             </header>
 
             <main className="App-main">
-            {/* Left panel: Search + Results */}
-            <section className="Panel">
+            {/* TOP ROW: Search + Playlist (40/40) */}
+            <div className="TopRow">
+                <section className="Panel">
                 <div className="Panel-header">
-                <div className="Panel-title">
+                    <div className="Panel-title">
                     Search
                     <span className="Panel-meta">Find tracks to add</span>
+                    </div>
                 </div>
-                </div>
+
                 <div className="Panel-body">
-                <SearchBar onSearch={onSearch} />
-                <div className="Divider" />
-                <SearchResults
+                    <SearchBar onSearch={onSearch} />
+                    <div className="Divider" />
+                    <SearchResults
                     tracks={searchResults}
                     onAddTrack={addTrack}
                     playlistUris={playlistUris}
-                />
+                    />
                 </div>
-
-                <div className="Divider" />
-
-                <section className="Panel" style={{ minHeight: "unset" }}>
-                <UserPlaylists
-                    playlists={userPlaylists}
-                    isLoading={isLoadingPlaylists}
-                    error={playlistsError}
-                />
                 </section>
 
-
-
-
-
-
-            </section>
-
-            {/* Right panel: Playlist */}
-            <section className="Panel">
+                <section className="Panel">
                 <div className="Panel-header">
-                <div className="Panel-title">
+                    <div className="Panel-title">
                     Playlist
                     <span className="Panel-meta">{playlistTracks.length} track(s)</span>
+                    </div>
                 </div>
-                </div>
+
                 <div className="Panel-body">
-                <Playlist
+                    <Playlist
                     name={playlistName}
                     tracks={playlistTracks}
                     onNameChange={setPlaylistName}
                     onRemoveTrack={removeTrack}
                     onSave={savePlaylist}
+                    />
+                </div>
+                </section>
+            </div>
+
+            {/* BOTTOM ROW: Your Playlists (20%) */}
+            <section className="Panel BottomRow">
+                <div className="Panel-header">
+                <div className="Panel-title">
+                    Your Playlists
+                    <span className="Panel-meta">{userPlaylists.length} total</span>
+                </div>
+                </div>
+
+                <div className="Panel-body">
+                <UserPlaylists
+                    playlists={userPlaylists}
+                    isLoading={isLoadingPlaylists}
+                    error={playlistsError}
                 />
                 </div>
             </section>
             </main>
         </div>
         );
+
 }
