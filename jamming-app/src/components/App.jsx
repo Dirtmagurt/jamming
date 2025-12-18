@@ -71,18 +71,34 @@ export  default function App() {
 
         // Save Playlist 
     const savePlaylist = async () => {
-    const trackUris = playlistTracks.map((t) => t.uri);
+        const trackUris = playlistTracks.map((t) => t.uri);
 
-    try {
-        await Spotify.savePlaylist(playlistName, trackUris);
+        try {
+            // If we have an active playlist loaded, update it only if changed
+            if (activePlaylistId) {
+            if (!isDirty) return; // guard; button should already be disabled
 
-        // Reset UI after successful save
-        setPlaylistName("New Playlist");
-        setPlaylistTracks([]);
-    } catch (err) {
-        console.error(err);
-        alert(err.message);
-    }
+            await Spotify.updatePlaylist(activePlaylistId, playlistName, trackUris);
+
+            // Update snapshot so Save disables again
+            setOriginalSnapshot({
+                id: activePlaylistId,
+                name: playlistName,
+                uris: trackUris,
+            });
+
+            return;
+            }
+
+            // Otherwise, keep your current behavior: create a new playlist
+            await Spotify.savePlaylist(playlistName, trackUris);
+
+            setPlaylistName("New Playlist");
+            setPlaylistTracks([]);
+        } catch (err) {
+            console.error(err);
+            alert(err.message);
+        }
     };
 
     const [userPlaylists, setUserPlaylists] = useState([]);
@@ -136,6 +152,32 @@ export  default function App() {
         };
 
     const isDirty = computeIsDirty();
+
+    ///This is the function for loading a current playlist into our Playlist "editor panel"
+    const loadPlaylistIntoEditor = async (playlistId) => {
+        try {
+            const playlistMeta = userPlaylists.find((p) => p.id === playlistId);
+
+            // Load tracks from Spotify
+            const tracks = await Spotify.getPlaylistTracks(playlistId);
+
+            // Set editor state
+            setActivePlaylistId(playlistId);
+            setPlaylistName(playlistMeta?.name || "Selected Playlist");
+            setPlaylistTracks(tracks);
+
+            // Snapshot for change detection
+            setOriginalSnapshot({
+            id: playlistId,
+            name: playlistMeta?.name || "Selected Playlist",
+            uris: tracks.map((t) => t.uri),
+            });
+        } catch (err) {
+            console.error(err);
+            alert(err.message || "Failed to load playlist.");
+        }
+        };
+
 
 
 
