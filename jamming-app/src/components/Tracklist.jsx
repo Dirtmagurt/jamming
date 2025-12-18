@@ -16,7 +16,7 @@ export default function TrackList({ tracks, onAddTrack, isRemoval, onRemoveTrack
           />
         ))
       ) : (
-        <p className="EmptyStaate" >No tracks found.</p>
+        <p className="EmptyState" >No tracks found.</p>
       )}
     </div>
   );
