@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function UserPlaylists({ playlists = [], isLoading, error }) {
+export default function UserPlaylists({ playlists = [], isLoading, error, onSelectPlaylist }) {
   if (isLoading) return <p className="EmptyState">Loading playlists...</p>;
   if (error) return <p className="EmptyState">Error: {error}</p>;
   if (!playlists.length) return <p className="EmptyState">No playlists found.</p>;
@@ -8,7 +8,13 @@ export default function UserPlaylists({ playlists = [], isLoading, error }) {
   return (
     <div className="TrackList">
       {playlists.map((p) => (
-        <div className="Track" key={p.id}>
+        <button
+          key={p.id}
+          type="button"
+          className="Track"
+          onClick={() => onSelectPlaylist?.(p.id)}
+          style={{ textAlign: "left", width: "100%", cursor: "pointer" }}
+        >
           <div className="Track-info">
             <h3>{p.name}</h3>
             <p>
@@ -48,11 +54,8 @@ export default function UserPlaylists({ playlists = [], isLoading, error }) {
               {p.name?.trim()?.[0]?.toUpperCase() || "♪"}
             </div>
           )}
-        </div>
+        </button>
       ))}
     </div>
   );
 }
-
-
-
