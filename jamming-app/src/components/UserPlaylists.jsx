@@ -26,7 +26,7 @@ export default function UserPlaylists({ playlists, isLoading, error }) {
         {!isLoading && !error && playlists?.length > 0 && (
           <div className="TrackList">
             {playlists.map((p) => (
-              <div className="Track" key={p.id}>
+              <div className="Track" key={`${p.id}-${p.owner}`}>
                 <div className="Track-info">
                   <h3>{p.name}</h3>
                   <p>
@@ -65,3 +65,5 @@ export default function UserPlaylists({ playlists, isLoading, error }) {
     </div>
   );
 }
+
+

@@ -117,14 +117,40 @@ body::before {
   max-width: 1100px;
   margin: 0 auto;
   padding: 22px 18px 40px;
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+
+  /* New: column layout (top row + bottom row) */
+  display: flex;
+  flex-direction: column;
   gap: 18px;
+
+  /* New: keep the page from growing taller; panels scroll internally */
+  flex: 1;
+  min-height: 0;
+}
+
+.TopRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 40% / 40% visually (equal columns) */
+  gap: 18px;
+
+  /* New: take remaining space above the bottom panel */
+  flex: 1;
+  min-height: 0;
+}
+
+.BottomRow {
+  /* New: ~20% of viewport height, but with sensible min/max */
+  height: clamp(170px, 20vh, 260px);
+  min-height: 0;
 }
 
 @media (max-width: 900px) {
-  .App-main {
+  .TopRow {
     grid-template-columns: 1fr;
+  }
+
+  .BottomRow {
+    height: clamp(180px, 26vh, 320px);
   }
 }
 
@@ -135,10 +161,15 @@ body::before {
   border: 1px solid var(--stroke-soft);
   box-shadow: var(--shadow-soft);
   overflow: hidden;
+
   display: flex;
   flex-direction: column;
-  min-height: 520px;
+
+  /* New: critical for internal scrolling */
+  min-height: 0;
+  height: 100%;
 }
+
 
 .Panel-header {
   padding: 16px 16px 12px;
@@ -169,8 +200,13 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  height: 100%;
+
+  /* New: critical for internal scrolling */
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
+
 
 /* ---------- Search Bar ---------- */
 .SearchBar {
@@ -232,9 +268,15 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 10px;
+
   overflow: auto;
   padding-right: 6px;
+
+  /* New: fills available space */
+  flex: 1;
+  min-height: 0;
 }
+
 
 .Track {
   display: grid;
