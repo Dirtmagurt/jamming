@@ -374,3 +374,24 @@ body::before {
   font-size: 13px;
   padding: 12px 4px;
 }
+
+
+/* --------------Scroll Bar--------*/ 
+.TrackList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.TrackList::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.TrackList::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.TrackList::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.32);
+}
