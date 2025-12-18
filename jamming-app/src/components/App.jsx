@@ -256,6 +256,7 @@ export  default function App() {
                     playlists={userPlaylists}
                     isLoading={isLoadingPlaylists}
                     error={playlistsError}
+                    onSelectPlaylist={loadPlaylistIntoEditor}
                 />
                 </div>
             </section>
