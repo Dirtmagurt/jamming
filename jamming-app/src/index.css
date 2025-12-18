@@ -147,10 +147,10 @@ body::before {
 }
 
 .BottomRow {
-  /* New: ~20% of viewport height, but with sensible min/max */
-  height: clamp(170px, 20vh, 260px);
+  height: clamp(210px, 26vh, 340px);
   min-height: 0;
 }
+
 
 @media (max-width: 900px) {
   .TopRow {
