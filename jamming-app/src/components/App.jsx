@@ -17,6 +17,7 @@ const mockPlaylistTracks = [
   { id: 102, name: "Don’t Start Now", artist: "Dua Lipa", album: "Future Nostalgia", uri: "spotify:track:3PfIrDoz19wz7qK7tYeu62" },
 ];
 
+const canSave = activePlaylistId ? isDirty : playlistTracks.length > 0;
 
 
 export  default function App() {
@@ -237,6 +238,7 @@ export  default function App() {
                     onNameChange={setPlaylistName}
                     onRemoveTrack={removeTrack}
                     onSave={savePlaylist}
+                    canSave={canSave}
                     />
                 </div>
                 </section>
