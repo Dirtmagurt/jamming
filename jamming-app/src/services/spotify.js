@@ -309,6 +309,72 @@ const Spotify = {
     }));
   },
 
+    
+
+  async getPlaylistTracks(playlistId, limit = 100) {
+    const accessToken = await this.getAccessToken();
+    if (!accessToken) return [];
+
+    let url = `https://api.spotify.com/v1/playlists/${encodeURIComponent(
+      playlistId
+    )}/tracks?limit=${limit}`;
+
+    const allItems = [];
+
+    while (url) {
+      const data = await spotifyFetch(url, accessToken);
+      allItems.push(...(data.items || []));
+      url = data.next;
+    }
+
+    return allItems
+      .map((item) => item.track)
+      .filter(Boolean)
+      .map((t) => ({
+        id: t.id,
+        name: t.name,
+        artist: t.artists?.[0]?.name ?? "Unknown Artist",
+        album: t.album?.name ?? "Unknown Album",
+        uri: t.uri,
+      }));
+  },
+
+  async updatePlaylist(playlistId, playlistName, trackUris) {
+    if (!playlistId) return;
+    if (!playlistName) return;
+    if (!trackUris || trackUris.length === 0) return;
+
+    const accessToken = await this.getAccessToken();
+    if (!accessToken) return;
+
+    // 1) Update playlist details (name)
+    await spotifyFetch(
+      `https://api.spotify.com/v1/playlists/${encodeURIComponent(playlistId)}`,
+      accessToken,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          name: playlistName,
+          public: false, 
+          description: "Updated with Jammming",
+        }),
+      }
+    );
+
+    // 2) Replace playlist items to match the UI 
+    await spotifyFetch(
+      `https://api.spotify.com/v1/playlists/${encodeURIComponent(playlistId)}/tracks`,
+      accessToken,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          uris: trackUris,
+        }),
+      }
+    );
+  },
+
+
 
 };
 
