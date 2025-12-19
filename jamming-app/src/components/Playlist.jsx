@@ -1,37 +1,31 @@
 import React from "react";
 import TrackList from "./Tracklist";
 
-export default function Playlist ({name, tracks, onNameChange, onRemoveTrack, onSave, canSave }) {
-    // Handle playlist name change
-    const handleNameChange = (event) => {
-        onNameChange(event.target.value);
-    };
+export default function Playlist({ name, tracks, onNameChange, onRemoveTrack, onSave, canSave }) {
+  const handleNameChange = (event) => onNameChange(event.target.value);
 
-    return (
-        <section className="Playlist">
-            {/* Editable playlist title */}
-            <input type="text"
-            className="PlaylistName"
-            value={name}                 // controlled by App state
-            onChange={handleNameChange}  //updates App state on each keystrok
-            placeholder="New Playlist"
-            />
+  return (
+    <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
+      <input
+        type="text"
+        className="PlaylistName"
+        value={name}
+        onChange={handleNameChange}
+        placeholder="New Playlist"
+      />
 
+      <div className="Divider" />
 
-            
+      {/* critical: this creates the scroll containment area */}
+      <div style={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
+        <TrackList tracks={tracks} isRemoval={true} onRemoveTrack={onRemoveTrack} />
+      </div>
 
-            <TrackList 
-            tracks={tracks}
-             isRemoval={true} 
-             onRemoveTrack={onRemoveTrack} />
-
-
+      <div style={{ paddingTop: 12 }}>
         <button className="Button" onClick={onSave} disabled={!canSave}>
-        {canSave ? "Save to Spotify" : "No changes to save"}
+          {canSave ? "Save to Spotify" : "No changes to save"}
         </button>
-
- 
-
-        </section>
-    );
+      </div>
+    </div>
+  );
 }

@@ -397,3 +397,27 @@ body::before {
 .TrackList::-webkit-scrollbar-thumb:hover {
   background-color: rgba(255, 255, 255, 0.32);
 }
+
+
+
+/*------------User Playlist Buttons---------*/
+/* Only affects the playlist rows (buttons), keeps your Track “bubble” styling */
+button.Track {
+  color: inherit;            
+  font: inherit;             
+  text-align: inherit;
+  cursor: pointer;
+
+  background: var(--glass);  /* keeps card/bubble look */
+  border: 1px solid var(--stroke-soft);
+  padding: 12px 14px;        /* match your Track spacing */
+  border-radius: 16px;       /* match your bubble */
+}
+
+button.Track:hover {
+  transform: translateY(-1px);
+}
+
+button.Track:active {
+  transform: translateY(0px);
+}
