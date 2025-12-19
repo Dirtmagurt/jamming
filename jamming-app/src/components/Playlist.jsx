@@ -4,28 +4,31 @@ import TrackList from "./Tracklist";
 export default function Playlist({ name, tracks, onNameChange, onRemoveTrack, onSave, canSave }) {
   const handleNameChange = (event) => onNameChange(event.target.value);
 
-  return (
-    <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
-      <input
-        type="text"
-        className="PlaylistName"
-        value={name}
-        onChange={handleNameChange}
-        placeholder="New Playlist"
-      />
 
-      <div className="Divider" />
+    return (
+        <div className="PlaylistPanel">
+        {/* Top (non-scrolling) */}
+        <input
+            className="PlaylistName"
+            type="text"
+            value={name}
+            onChange={handleNameChange}
+            placeholder="New Playlist"
+        />
 
-      {/* critical: this creates the scroll containment area */}
-      <div style={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
-        <TrackList tracks={tracks} isRemoval={true} onRemoveTrack={onRemoveTrack} />
-      </div>
+        <div className="Divider" />
 
-      <div style={{ paddingTop: 12 }}>
-        <button className="Button" onClick={onSave} disabled={!canSave}>
-          {canSave ? "Save to Spotify" : "No changes to save"}
-        </button>
-      </div>
-    </div>
+        {/* Middle (scrolling happens INSIDE TrackList) */}
+        <div className="PlaylistListWrap">
+            <TrackList tracks={tracks} onRemoveTrack={onRemoveTrack} isRemoval />
+        </div>
+
+        {/* Bottom (non-scrolling, always visible) */}
+        <div className="PlaylistFooter">
+            <button className="Button" onClick={onSave} disabled={!canSave}>
+            {canSave ? "Save to Spotify" : "No changes to save"}
+            </button>
+        </div>
+        </div>
   );
 }

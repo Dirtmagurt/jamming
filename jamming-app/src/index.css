@@ -398,6 +398,29 @@ body::before {
   background-color: rgba(255, 255, 255, 0.32);
 }
 
+/* Right panel internal layout: top + scrollable middle + fixed footer */
+.PlaylistPanel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* This wrapper must be a flex parent so TrackList can flex/scroll */
+.PlaylistListWrap {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden; /* forces TrackList to be the scroller */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Footer pinned inside the panel */
+.PlaylistFooter {
+  padding-top: 12px;
+}
+
+
 
 
 /*------------User Playlist Buttons---------*/
