@@ -158,26 +158,46 @@ async function fetchJson(url, accessToken) {
      return resp.json();
 }
 
-async function spotifyFetch(url, accessToken, options = {}) {
-  const resp = await fetch(url, {
-    ...options,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    },
-  });
+  async function spotifyFetch(url, accessToken, options = {}) {
+    const resp = await fetch(url, {
+      ...options,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+    });
 
-  if (!resp.ok) {
-    const text = await resp.text();
-    if (resp.status === 401) {
-      throw new Error("Invalid or expired access token, please log in again.");
+    if (!resp.ok) {
+      const text = await resp.text().catch(() => "");
+      if (resp.status === 401) {
+        throw new Error("Invalid or expired access token, please log in again.");
+      }
+      throw new Error(`Spotify API error (${resp.status}): ${text}`);
     }
-    throw new Error(`Spotify API error (${resp.status}): ${text}`);
+
+    // if Spotify returns 204 No Content for PUTs/DELETEs
+    if (resp.status === 204) return null;
+
+    // Some Spotify endpoints return 200/201 with an empty body.
+    // Avoids calling resp.json() unless we actually have JSON to parse.
+    const contentType = resp.headers.get("content-type") || "";
+
+    // Read body once (can't call json() after text())
+    const text = await resp.text().catch(() => "");
+
+    // Empty body? Return null (prevents "Unexpected end of JSON input")
+    if (!text) return null;
+
+    // JSON body? Parse it
+    if (contentType.includes("application/json")) {
+      return JSON.parse(text);
+    }
+
+    // Non-JSON body? Return raw text (rare, but safe)
+    return text;
   }
 
-  return resp.status === 204 ? null : resp.json();
-}
 
 
 
