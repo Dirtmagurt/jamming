@@ -64,20 +64,42 @@ export  default function App() {
     };
 
 
+    const normalizeName = (s) => (s || "").trim().toLowerCase();
+
+    const findDuplicateByName = (name, excludeId = null) => {
+    const target = normalizeName(name);
+    if (!target) return null;
+
+    return userPlaylists.find(
+        (p) => normalizeName(p.name) === target && p.id !== excludeId
+    );
+    };
+
+
+
   
   
 
 
 
 
-        // Save Playlist 
+    /// Save Playlist 
     const savePlaylist = async () => {
         const trackUris = playlistTracks.map((t) => t.uri);
 
         try {
-            // If we have an active playlist loaded, update it only if changed
+            // EXISTING PLAYLIST MODE: update only if changed
             if (activePlaylistId) {
-            if (!isDirty) return; // guard; button should already be disabled
+            if (!isDirty) return;
+
+            // Prevent renaming to a name used by another playlist
+            const dup = findDuplicateByName(playlistName, activePlaylistId);
+            if (dup) {
+                alert(
+                `A different playlist already uses the name "${dup.name}". Please choose a different name.`
+                );
+                return;
+            }
 
             await Spotify.updatePlaylist(activePlaylistId, playlistName, trackUris);
 
@@ -91,39 +113,49 @@ export  default function App() {
             return;
             }
 
-            // Otherwise, keep your current behavior: create a new playlist
+            // NEW PLAYLIST MODE: prevent creating a duplicate name
+            const dup = findDuplicateByName(playlistName);
+            if (dup) {
+            alert(
+                `A playlist named "${dup.name}" already exists. Please choose a different name.`
+            );
+            return;
+            }
+
+            // Otherwise, keep current behavior: create a new playlist
             await Spotify.savePlaylist(playlistName, trackUris);
 
             setPlaylistName("New Playlist");
             setPlaylistTracks([]);
         } catch (err) {
             console.error(err);
-            alert(err.message);
+            alert(err.message || "Save failed.");
         }
     };
 
-    const [userPlaylists, setUserPlaylists] = useState([]);
-    const [isLoadingPlaylists, setIsLoadingPlaylists] = useState(false);
-    const [playlistsError, setPlaylistsError] = useState("");
+
+        const [userPlaylists, setUserPlaylists] = useState([]);
+        const [isLoadingPlaylists, setIsLoadingPlaylists] = useState(false);
+        const [playlistsError, setPlaylistsError] = useState("");
 
 
-    useEffect(() => {
-    const loadPlaylists = async () => {
-        try {
-        setIsLoadingPlaylists(true);
-        setPlaylistsError("");
-        const playlists = await Spotify.getCurrentUserPlaylists();
-        setUserPlaylists(playlists);
-        } catch (e) {
-        console.error(e);
-        setPlaylistsError(e.message || "Failed to load playlists.");
-        } finally {
-        setIsLoadingPlaylists(false);
-        }
-    };
+        useEffect(() => {
+        const loadPlaylists = async () => {
+            try {
+            setIsLoadingPlaylists(true);
+            setPlaylistsError("");
+            const playlists = await Spotify.getCurrentUserPlaylists();
+            setUserPlaylists(playlists);
+            } catch (e) {
+            console.error(e);
+            setPlaylistsError(e.message || "Failed to load playlists.");
+            } finally {
+            setIsLoadingPlaylists(false);
+            }
+        };
 
-    loadPlaylists();
-    }, []);
+        loadPlaylists();
+        }, []);
 
 
 
