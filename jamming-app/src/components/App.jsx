@@ -214,6 +214,20 @@ export  default function App() {
     const canSave = activePlaylistId ? isDirty : playlistTracks.length > 0;
 
 
+    const startNewPlaylist = () => {
+        if (activePlaylistId && isDirty) {
+            const ok = window.confirm("Discard unsaved changes and start a new playlist?");
+            if (!ok) return;
+        }
+
+        setActivePlaylistId(null);
+        setOriginalSnapshot(null);
+        setPlaylistName("My Playlist");
+        setPlaylistTracks([]);
+        };
+
+
+
 
 
 
@@ -273,6 +287,8 @@ export  default function App() {
                     onRemoveTrack={removeTrack}
                     onSave={savePlaylist}
                     canSave={canSave}
+                    isEditingExisting={Boolean(activePlaylistId)}
+                    onStartNew={startNewPlaylist}
                     />
                 </div>
                 </section>
