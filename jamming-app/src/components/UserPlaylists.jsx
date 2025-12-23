@@ -21,18 +21,20 @@ export default function UserPlaylists({ playlists = [], isLoading, error, onSele
               {p.owner} • {p.trackCount} tracks
             </p>
           </div>
+          
+          <div className="PlaylistActions">
+            <button
+              type="button"
+              className="GhostDanger"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDeletePlaylist?.(p.id);
+              }}
+            >
+              Delete
+            </button>
+          </div>
 
-          {/* Delete button (ghost style) */}
-          <button
-            type="button"
-            className="GhostDanger"
-            onClick={(e) => {
-              e.stopPropagation(); //  critical operation
-              onDeletePlaylist?.(p.id);
-            }}
-          >
-            Delete
-          </button>
 
           {p.imageUrl ? (
             <img
