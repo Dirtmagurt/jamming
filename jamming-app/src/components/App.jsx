@@ -112,6 +112,15 @@ export  default function App() {
                 )
             );
 
+            //Reconcile state with SPotify's source of truth incase of endpoint lag
+            const fresh = await Spotify.getPlaylistTracks(activePlaylistId);
+            if (fresh) {
+                setUserPlaylists((prev) =>
+                prev.map((p) =>
+                    (p.id === activePlaylistId ? {...p, ...fresh } : p))
+            );
+            }
+
             // Update snapshot so Save disables again
             setOriginalSnapshot({
                 id: activePlaylistId,
