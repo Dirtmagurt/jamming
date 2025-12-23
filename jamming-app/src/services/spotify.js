@@ -407,6 +407,25 @@ const Spotify = {
       );
     },
 
+  async getPlaylistMeta(playlistId) {
+    const accessToken = await this.getAccessToken();
+    if (!accessToken) return null;
+
+    const data = await spotifyFetch(
+      `https://api.spotify.com/v1/playlists/${encodeURIComponent(
+        playlistId
+      )}?fields=id,name,images,tracks.total,owner(display_name,id)`,
+      accessToken
+    );
+
+    return {
+      id: data.id,
+      name: data.name,
+      imageUrl: data.images?.[0]?.url || "",
+      trackCount: data.tracks?.total ?? 0,
+      owner: data.owner?.display_name || data.owner?.id || "",
+    };
+  }
 
 
 
