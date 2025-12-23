@@ -139,23 +139,28 @@ export  default function App() {
         const [playlistsError, setPlaylistsError] = useState("");
 
 
-        useEffect(() => {
-        const loadPlaylists = async () => {
-            try {
-            setIsLoadingPlaylists(true);
-            setPlaylistsError("");
-            const playlists = await Spotify.getCurrentUserPlaylists();
-            setUserPlaylists(playlists);
-            } catch (e) {
-            console.error(e);
-            setPlaylistsError(e.message || "Failed to load playlists.");
-            } finally {
-            setIsLoadingPlaylists(false);
-            }
-        };
 
-        loadPlaylists();
+        const refreshUserPlaylists = async () => {
+            try {
+                setIsLoadingPlaylists(true);
+                const playlists = await Spotify.getCurrentUserPlaylists();
+                setUserPlaylists(playlists);
+                setPlaylistsError(null);
+            } catch (e) {
+                console.error(e);
+                setPlaylistsError(e.message || "Failed to load playlists");
+            } finally {
+                setIsLoadingPlaylists(false);
+            }
+            };
+
+
+
+
+        useEffect(() => {
+        refreshUserPlaylists();
         }, []);
+
 
 
 
@@ -212,6 +217,7 @@ export  default function App() {
         };
 
     const canSave = activePlaylistId ? isDirty : playlistTracks.length > 0;
+
 
 
     const startNewPlaylist = () => {
