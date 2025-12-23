@@ -103,6 +103,15 @@ export  default function App() {
 
             await Spotify.updatePlaylist(activePlaylistId, playlistName, trackUris);
 
+            ///Update the preview panel immediately
+            setUserPlaylists((prev) =>
+                prev.map((p) =>
+                p.id === activePlaylistId
+                    ?{...p, name: playlistName, trackCount: trackUris.length }
+                    :p
+                )
+            );
+
             // Update snapshot so Save disables again
             setOriginalSnapshot({
                 id: activePlaylistId,
