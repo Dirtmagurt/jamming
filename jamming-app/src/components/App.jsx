@@ -110,6 +110,7 @@ export  default function App() {
                 uris: trackUris,
             });
 
+            await refreshUserPlaylists(); //Fixes inccorect playlist info 
             return;
             }
 
@@ -127,6 +128,8 @@ export  default function App() {
 
             setPlaylistName("New Playlist");
             setPlaylistTracks([]);
+
+            await refreshUserPlaylists();
         } catch (err) {
             console.error(err);
             alert(err.message || "Save failed.");
