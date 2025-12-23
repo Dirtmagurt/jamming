@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function UserPlaylists({ playlists = [], isLoading, error, onSelectPlaylist }) {
+export default function UserPlaylists({ playlists = [], isLoading, error, onSelectPlaylist, onDeletePlaylist }) {
   if (isLoading) return <p className="EmptyState">Loading playlists...</p>;
   if (error) return <p className="EmptyState">Error: {error}</p>;
   if (!playlists.length) return <p className="EmptyState">No playlists found.</p>;
@@ -21,6 +21,18 @@ export default function UserPlaylists({ playlists = [], isLoading, error, onSele
               {p.owner} • {p.trackCount} tracks
             </p>
           </div>
+
+          {/* Delete button (ghost style) */}
+          <button
+            type="button"
+            className="GhostDanger"
+            onClick={(e) => {
+              e.stopPropagation(); //  critical operation
+              onDeletePlaylist?.(p.id);
+            }}
+          >
+            Delete
+          </button>
 
           {p.imageUrl ? (
             <img
