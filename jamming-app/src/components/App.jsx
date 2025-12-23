@@ -221,6 +221,31 @@ export  default function App() {
 
     const canSave = activePlaylistId ? isDirty : playlistTracks.length > 0;
 
+    const deleteUserPlaylist = async (playlistId) => {
+        const playlist = userPlaylists.find((p) => p.id === playlistId);
+
+        const ok = window.confirm(
+            `Delete "${playlist?.name}"?\n\nThis will permanently remove it from Spotify.`
+        );
+        if (!ok) return;
+
+        try {
+            await Spotify.deletePlaylist(playlistId);
+
+            // Remove from UI immediately
+            setUserPlaylists((prev) => prev.filter((p) => p.id !== playlistId));
+
+            // If currently editing this playlist, exit editor
+            if (activePlaylistId === playlistId) {
+            startNewPlaylist();
+            }
+        } catch (e) {
+            console.error(e);
+            alert(e.message || "Failed to delete playlist.");
+        }
+        };
+
+
 
 
     const startNewPlaylist = () => {
