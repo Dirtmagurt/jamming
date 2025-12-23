@@ -343,6 +343,7 @@ export  default function App() {
                     isLoading={isLoadingPlaylists}
                     error={playlistsError}
                     onSelectPlaylist={loadPlaylistIntoEditor}
+                    onDeletePlaylist={deleteUserPlaylist}
                 />
                 </div>
             </section>
