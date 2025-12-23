@@ -75,6 +75,29 @@ export  default function App() {
     );
     };
 
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+    const reconcilePlaylistPreview = async (playlistId, expectedTrackCount) => {
+        // Try a few times because Spotify can lag immediately after track edits
+        for (let attempt = 0; attempt < 3; attempt++) {
+            try {
+            const fresh = await Spotify.getPlaylistMeta(playlistId);
+            if (fresh) {
+                setUserPlaylists((prev) =>
+                prev.map((p) => (p.id === playlistId ? { ...p, ...fresh } : p))
+                );
+
+                // If Spotify has caught up, stop retrying
+                if (fresh.trackCount === expectedTrackCount) return;
+            }
+            } catch (e) {
+            // ignore and retry
+            }
+            await sleep(500);
+        }
+        };
+
+
 
 
   
@@ -90,47 +113,36 @@ export  default function App() {
         try {
             // EXISTING PLAYLIST MODE: update only if changed
             if (activePlaylistId) {
-            if (!isDirty) return;
+                if (!isDirty) return;
 
-            // Prevent renaming to a name used by another playlist
-            const dup = findDuplicateByName(playlistName, activePlaylistId);
-            if (dup) {
-                alert(
-                `A different playlist already uses the name "${dup.name}". Please choose a different name.`
-                );
-                return;
-            }
+                const dup = findDuplicateByName(playlistName, activePlaylistId);
+                if (dup) {
+                    alert(`A different playlist already uses the name "${dup.name}". Please choose a different name.`);
+                    return;
+                }
 
-            await Spotify.updatePlaylist(activePlaylistId, playlistName, trackUris);
+                await Spotify.updatePlaylist(activePlaylistId, playlistName, trackUris);
 
-            ///Update the preview panel immediately
-            setUserPlaylists((prev) =>
-                prev.map((p) =>
-                p.id === activePlaylistId
-                    ?{...p, name: playlistName, trackCount: trackUris.length }
-                    :p
-                )
-            );
-
-            //Reconcile state with SPotify's source of truth incase of endpoint lag
-            const fresh = await Spotify.getPlaylistTracks(activePlaylistId);
-            if (fresh) {
+                // ✅ optimistic update (keeps UI correct immediately)
                 setUserPlaylists((prev) =>
-                prev.map((p) =>
-                    (p.id === activePlaylistId ? {...p, ...fresh } : p))
-            );
-            }
+                    prev.map((p) =>
+                    p.id === activePlaylistId
+                        ? { ...p, name: playlistName, trackCount: trackUris.length }
+                        : p
+                    )
+                );
 
-            // Update snapshot so Save disables again
-            setOriginalSnapshot({
-                id: activePlaylistId,
-                name: playlistName,
-                uris: trackUris,
-            });
+                // ✅ reconcile using playlist meta (NOT /me/playlists)
+                await reconcilePlaylistPreview(activePlaylistId, trackUris.length);
 
-            await refreshUserPlaylists(); //Fixes inccorect playlist info 
-            return;
-            }
+                setOriginalSnapshot({
+                    id: activePlaylistId,
+                    name: playlistName,
+                    uris: trackUris,
+                });
+
+                return;
+                }
 
             // NEW PLAYLIST MODE: prevent creating a duplicate name
             const dup = findDuplicateByName(playlistName);
