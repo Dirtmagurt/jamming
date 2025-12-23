@@ -394,6 +394,20 @@ const Spotify = {
     );
   },
 
+  async deletePlaylist(playlistId) {
+      if (!playlistId) return;
+
+      const accessToken = await this.getAccessToken();
+      if (!accessToken) return;
+
+      await spotifyFetch(
+        `https://api.spotify.com/v1/playlists/${encodeURIComponent(playlistId)}/followers`,
+        accessToken,
+        { method: "DELETE" }
+      );
+    },
+
+
 
 
 };
